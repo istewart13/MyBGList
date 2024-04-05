@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyBGList.DTO;
 
 namespace MyBGList.Controllers
 {
@@ -14,26 +15,41 @@ namespace MyBGList.Controllers
         }
 
         [HttpGet(Name = "GetBoardGames")]
-        public IEnumerable<BoardGame> Get()
+        [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 60)]
+        public RestDTO<BoardGame[]> Get()
         {
-            return [
-                new BoardGame() {
-                    Id = 1,
-                    Name = "Axis & Allies",
-                    Year = 1981
+            return new RestDTO<BoardGame[]>
+            (
+                Links: new List<LinkDTO>
+                {
+                    new LinkDTO(
+                        Href: Url.Action(null, "BoardGames", null, Request.Scheme)!,
+                        Rel: "self",
+                        Type: "GET"
+                    )
                 },
-                new BoardGame() {
-                    Id = 2,
-                    Name = "Citadels",
-                    Year = 2000
-                },
-                new BoardGame() {
-                    Id = 3,
-
-                    Name = "Terraforming Mars",
-                    Year = 2016
-                }
-            ];
+                Data:
+                [
+                    new BoardGame
+                    {
+                        Id = 1,
+                        Name = "Axis & Allies",
+                        Year = 1981
+                    },
+                    new BoardGame
+                    {
+                        Id = 2,
+                        Name = "Citadels",
+                        Year = 2000
+                    },
+                    new BoardGame
+                    {
+                        Id = 3,
+                        Name = "Terraforming Mars",
+                        Year = 2016
+                    }
+                ]
+            );
         }
     }
 }
