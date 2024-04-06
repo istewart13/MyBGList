@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Cors;
+using Microsoft.EntityFrameworkCore;
+using MyBGList.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,11 @@ builder.Services.AddCors(options => {
             cfg.AllowAnyMethod();
         });
 });
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"))
+);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
